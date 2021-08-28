@@ -1,14 +1,18 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
 public class AppRunIntoIt extends JFrame {
 
@@ -42,14 +46,14 @@ public class AppRunIntoIt extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JButton btnEnter = new JButton("");
+		btnEnter.setBounds(700, 520, 300, 100);
+		associerBoutonAvecImage(btnEnter,"enterButton.png");
+		contentPane.add(btnEnter);
+		
 		JLabel lblIntroPic = new JLabel(new ImageIcon("images/introPic.PNG"));
 		lblIntroPic.setBounds(0, 0, 1232, 696);
 		contentPane.add(lblIntroPic);
-		
-		JButton btnEnter = new JButton("ENTER");
-		btnEnter.setBounds(700, 520, 300, 100);
-		btnEnter.setBackground(new Color(243,154,157));
-		contentPane.add(btnEnter);
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,5 +63,41 @@ public class AppRunIntoIt extends JFrame {
 		setTitle("Run Into It");
 		
 
+	}
+	
+		/**
+	 * Associe une image a un bouton en redimensionnant l'image adequatement.
+	 * @param leBouton Le bouton auquel on veut associer l'image.
+	 * @param fichierImage L'image qui sera associee au bouton.
+	 * @Caroline Houle
+	 */
+
+	private void associerBoutonAvecImage( JButton leBouton, String fichierImage ) {		
+		Image imgLue=null;
+		java.net.URL urlImage = getClass().getClassLoader().getResource(fichierImage);  
+		if (urlImage == null) {
+			JOptionPane.showMessageDialog(null , "Fichier " + fichierImage + " introuvable");
+		} 
+		try {   
+			imgLue = ImageIO.read(urlImage);  
+		} catch (IOException e) {  
+			JOptionPane.showMessageDialog(null , "Erreur pendant la lecture du fichier d'image"); 
+		}
+
+		//redimensionner l'image de la meme grandeur que le bouton
+		Image imgRedim = imgLue.getScaledInstance( leBouton.getWidth(),  leBouton.getHeight(), Image.SCALE_SMOOTH);
+
+		//au cas ou le fond de l'image serait transparent
+		leBouton.setOpaque(false);
+		leBouton.setContentAreaFilled(false);
+		leBouton.setBorderPainted(false);
+
+		//associer l'image au bouton
+		leBouton.setText("");
+		leBouton.setIcon( new ImageIcon(imgRedim) );
+
+		//on se debarrasse des images intermediaires
+		imgLue.flush();
+		imgRedim.flush();
 	}
 }
