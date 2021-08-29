@@ -4,16 +4,20 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -23,6 +27,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.JButton;
+import javax.swing.JTextField;
 
 public class Journal extends JFrame {
 
@@ -34,7 +40,7 @@ public class Journal extends JFrame {
 	private String fontName[];
 	private Integer array[];
 	private JScrollPane scrollPane;
-	private ArrayList<JLabel> templateList = new <JLabel>ArrayList();
+	private ArrayList<String> entryList = new <String>ArrayList();
 	private JLabel lblNoteTaking;
 	private JLabel lblNoteTaking_1;
 	private JLabel lblNoteTakingWLink;
@@ -52,6 +58,9 @@ public class Journal extends JFrame {
 	private JLabel lblOutsideBox;
 	private JLabel lblPencilGreen;
 	private JLabel lblPaint;
+	private JButton btnSave;
+	private JTextField txtFieldDate;
+	private JLabel lblDate;
 
 	/**
 	 * Launch the application.
@@ -126,6 +135,27 @@ public class Journal extends JFrame {
 		textArea = new JTextArea();
 		scrollPane.setViewportView(textArea);
 		textArea.setLineWrap(true);
+		
+		btnSave = new JButton("");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				entryList.add(textArea.getText());
+			}
+		});
+		btnSave.setBounds(1030, 620, 168, 45);
+		associerBoutonAvecImage(btnSave, "saveButton.png");
+		contentPane.add(btnSave);
+		
+		txtFieldDate = new JTextField();
+		txtFieldDate.setBounds(647, 92, 222, 34);
+		contentPane.add(txtFieldDate);
+		txtFieldDate.setColumns(10);
+		
+		lblDate = new JLabel("Put the date:");
+		lblDate.setFont(new Font("Yu Gothic UI Semilight", Font.PLAIN, 17));
+		lblDate.setBounds(536, 91, 101, 34);
+		contentPane.add(lblDate);
 
 		spnSize.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -147,47 +177,38 @@ public class Journal extends JFrame {
 			lblNoteTaking = new JLabel(new ImageIcon("images/note-taking.png"));
 			lblNoteTaking.setBounds(10, 75, 88, 108);
 			contentPane.add(lblNoteTaking);
-			templateList.add(lblNoteTaking);
 
 			lblNoteTakingWLink = new JLabel(new ImageIcon("images/note-taking-w-link.png"));
 			lblNoteTakingWLink.setBounds(1106, 233, 50, 65);
 			contentPane.add(lblNoteTakingWLink);
-			templateList.add(lblNoteTakingWLink);
 
 			lblCloud = new JLabel(new ImageIcon("images/cloud.png"));
 			lblCloud.setBounds(835, 10, 79, 42);
 			contentPane.add(lblCloud);
-			templateList.add(lblCloud);
 
 			lblCloud_1 = new JLabel(new ImageIcon("images/cloud.png"));
 			lblCloud_1.setBounds(319, 10, 79, 42);
 			contentPane.add(lblCloud_1);
-			templateList.add(lblCloud_1);
 
 			lblBird = new JLabel(new ImageIcon("images/flying-bird.png"));
 			lblBird.setBounds(92, 233, 60, 52);
 			contentPane.add(lblBird);
-			templateList.add(lblBird);
 
 			lblWritingJournal = new JLabel(new ImageIcon("images/writing-journal.png"));
 			lblWritingJournal.setBounds(44, 388, 71, 65);
 			contentPane.add(lblWritingJournal);
-			templateList.add(lblWritingJournal);
 
 			lblIdea = new JLabel(new ImageIcon("images/idea.png"));
 			lblIdea.setBounds(1042, 441, 158, 143);
 			contentPane.add(lblIdea);
-			templateList.add(lblIdea);
 
 			lblRelaxedBird = new JLabel(new ImageIcon("images/relaxed-bird.png"));
 			lblRelaxedBird.setBounds(36, 516, 127, 134);
 			contentPane.add(lblRelaxedBird);
-			templateList.add(lblRelaxedBird);
 
 			lblBird_1 = new JLabel(new ImageIcon("images/flying-bird.png"));
 			lblBird_1.setBounds(1065, 39, 60, 52);
 			contentPane.add(lblBird_1);
-			templateList.add(lblBird_1);
 			break;
 
 		case 1:
@@ -262,6 +283,8 @@ public class Journal extends JFrame {
 			lblDeskLamp = new JLabel(new ImageIcon("images/desk-lamp.png"));
 			lblDeskLamp.setBounds(-17, 276, 207, 173);
 			contentPane.add(lblDeskLamp);
+			associerBoutonAvecImage(btnSave, "saveButtonNight.png");
+			lblDate.setForeground(Color.PINK);
 			break;
 		}
 
@@ -278,5 +301,42 @@ public class Journal extends JFrame {
 			return this;
 		}
 	}
+	
 
+	/**
+	 * Associe une image a un bouton en redimensionnant l'image adequatement.
+	 * 
+	 * @param leBouton     Le bouton auquel on veut associer l'image.
+	 * @param fichierImage L'image qui sera associee au bouton.
+	 * @Caroline Houle
+	 */
+
+	private void associerBoutonAvecImage(JButton leBouton, String fichierImage) {
+		Image imgLue = null;
+		java.net.URL urlImage = getClass().getClassLoader().getResource(fichierImage);
+		if (urlImage == null) {
+			JOptionPane.showMessageDialog(null, "Fichier " + fichierImage + " introuvable");
+		}
+		try {
+			imgLue = ImageIO.read(urlImage);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Erreur pendant la lecture du fichier d'image");
+		}
+
+		// redimensionner l'image de la meme grandeur que le bouton
+		Image imgRedim = imgLue.getScaledInstance(leBouton.getWidth(), leBouton.getHeight(), Image.SCALE_SMOOTH);
+
+		// au cas ou le fond de l'image serait transparent
+		leBouton.setOpaque(false);
+		leBouton.setContentAreaFilled(false);
+		leBouton.setBorderPainted(false);
+
+		// associer l'image au bouton
+		leBouton.setText("");
+		leBouton.setIcon(new ImageIcon(imgRedim));
+
+		// on se debarrasse des images intermediaires
+		imgLue.flush();
+		imgRedim.flush();
+	}
 }
