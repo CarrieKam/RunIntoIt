@@ -43,6 +43,7 @@ public class Preview extends JFrame {
 
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
+		textArea.setBackground(new Color(255, 204, 204));
 		textArea.setBounds(10, 10, 910, 559);
 		contentPane.add(textArea);
 
