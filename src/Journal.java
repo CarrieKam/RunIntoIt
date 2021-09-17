@@ -102,7 +102,7 @@ public class Journal extends JFrame {
 		mntmIdea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				idea.setVisible(true);
-
+				setBounds(310, 70, 1237, 723);
 			}
 		});
 		mnExtra.add(mntmIdea);

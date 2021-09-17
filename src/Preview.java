@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -46,7 +47,7 @@ public class Preview extends JFrame {
 		textArea.setBackground(new Color(255, 204, 204));
 		textArea.setBounds(10, 10, 910, 559);
 		contentPane.add(textArea);
-
+	
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension ecranDimension = Toolkit.getDefaultToolkit().getScreenSize();
